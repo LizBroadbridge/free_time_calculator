@@ -1,0 +1,22 @@
+body {
+    font-family: 'Rubik';
+}
+
+.header-title {
+    font-size: 48px;
+    color: purple;
+    text-align: center;
+  }
+
+.header-description {
+    color: #cc99ff;
+    margin: 4px auto;
+    text-align: center;
+    max-width: 384px;
+}
+
+.time-check-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
