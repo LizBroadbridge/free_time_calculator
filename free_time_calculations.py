@@ -1,9 +1,10 @@
 import pandas as pd
+import io
 from pandas.api.types import CategoricalDtype
 
 
-def free_time_calc():
-    df = pd.read_csv("free_time_calculations_A.csv")
+def free_time_calc(csv_string):
+    df = pd.read_csv(io.StringIO(csv_string))
 
     free_time_df = df[df["Text"].str.startswith("Free")].reset_index(drop=True)
 
