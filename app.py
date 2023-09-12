@@ -127,31 +127,27 @@ def update_output(contents):
 
     decoded = base64.b64decode(content_string)
 
-    try:
-        csv_string = decoded.decode('utf-8')
+    csv_string = decoded.decode('utf-8')
 
-        global prev_contents
+    global prev_contents
 
-        result_df = free_time_calc(csv_string)
+    result_df = free_time_calc(csv_string)
 
-        delta_dict = None
+    delta_dict = None
 
-        if prev_contents is not None:
-            delta_df = prev_contents.copy()
-            delta_df.iloc[:, 1:] = delta_df.iloc[:, 1:] - result_df.iloc[:, 1:]
-            delta_df.iloc[:, 1:] = delta_df.iloc[:,1:].map(lambda x: f"{int(x // 60)} hours {int(x % 60)} minutes")
-            delta_dict = delta_df.to_dict("records")
+    if prev_contents is not None:
+        delta_df = prev_contents.copy()
+        delta_df.iloc[:, 1:] = delta_df.iloc[:, 1:] - result_df.iloc[:, 1:]
+        delta_df.iloc[:, 1:] = delta_df.iloc[:,1:].map(lambda x: f"{int(x // 60)} hours {int(x % 60)} minutes")
+        delta_dict = delta_df.to_dict("records")
 
-        prev_contents = result_df.copy()
+    prev_contents = result_df.copy()
 
-        result_df.iloc[:,1:] = result_df.iloc[:,1:].map(lambda x: f"{int(x // 60)} hours {int(x % 60)} minutes")
+    result_df.iloc[:,1:] = result_df.iloc[:,1:].map(lambda x: f"{int(x // 60)} hours {int(x % 60)} minutes")
 
-        result_dict = result_df.to_dict("records")
+    result_dict = result_df.to_dict("records")
 
-        return result_dict, delta_dict
-    except Exception as e:
-        print(e)
-        return ['An error occurred while processing the file.'] # TODO this errors on render
+    return result_dict, delta_dict
 
 if __name__ == "__main__":
     app.run_server(debug=True)
