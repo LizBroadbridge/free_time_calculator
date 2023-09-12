@@ -23,4 +23,9 @@ def free_time_calc(csv_string):
 
     result_df["Total"] = result_df.iloc[:, 1:].sum(axis=1)
 
-    return result_df
+    totals = result_df.iloc[:, 1:].sum()
+    totals_df = pd.DataFrame(totals).T
+    totals_df.insert(0, 'Day', 'Total')
+    df_with_totals = pd.concat([result_df, totals_df])
+
+    return df_with_totals
