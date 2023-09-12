@@ -22,6 +22,6 @@ def free_time_calc():
 
     result_df["Total"] = result_df.iloc[:, 1:].sum(axis=1)
 
-    result_df.iloc[:,1:] = result_df.iloc[:,1:].applymap(lambda x: f"{int(x // 60)} hours {int(x % 60)} minutes")
+    result_df.iloc[:,1:] = result_df.iloc[:,1:].map(lambda x: f"{int(x // 60)} hours {int(x % 60)} minutes")
 
     return result_df
