@@ -70,14 +70,47 @@ app.layout = html.Div(
                     ],
                     type="default",
                 ),
+                html.P(
+                    children=(
+                        "Delta vs previous CSV:"
+                    ),
+                ),
+                dcc.Loading(
+                    id="loading-delta-table",
+                    children=[
+                        html.Div(
+                            [
+                                dash_table.DataTable(
+                                    id="delta-table",
+                                    columns=[
+                                        {"name": col, "id": col}
+                                        for col in [
+                                            "Day",
+                                            "Free",
+                                            "Free (at Gymnastics)",
+                                            "Free (boys at home)",
+                                            "Free (boys in bed)",
+                                            "Free (with Milo at home)",
+                                            "Total",
+                                        ]
+                                    ],
+                                ),
+                            ]
+                        ),
+                    ],
+                    type="default",
+                ),
             ],
             className="header",
         )
     ]
 )
 
+prev_contents = None
+
 @app.callback(
     Output('data-table', 'data'),
+    Output('delta-table', 'data'),
     Input('upload-data', 'contents'),
     prevent_initial_call=True
 )
@@ -96,8 +129,26 @@ def update_output(contents):
 
     try:
         csv_string = decoded.decode('utf-8')
-        result_dict = free_time_calc(csv_string).to_dict("records")
-        return result_dict
+
+        global prev_contents
+
+        result_df = free_time_calc(csv_string)
+
+        delta_dict = None
+
+        if prev_contents is not None:
+            delta_df = prev_contents.copy()
+            delta_df.iloc[:, 1:] = delta_df.iloc[:, 1:] - result_df.iloc[:, 1:]
+            delta_df.iloc[:, 1:] = delta_df.iloc[:,1:].map(lambda x: f"{int(x // 60)} hours {int(x % 60)} minutes")
+            delta_dict = delta_df.to_dict("records")
+
+        prev_contents = result_df.copy()
+
+        result_df.iloc[:,1:] = result_df.iloc[:,1:].map(lambda x: f"{int(x // 60)} hours {int(x % 60)} minutes")
+
+        result_dict = result_df.to_dict("records")
+
+        return result_dict, delta_dict
     except Exception as e:
         print(e)
         return ['An error occurred while processing the file.'] # TODO this errors on render
