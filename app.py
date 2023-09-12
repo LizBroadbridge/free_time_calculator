@@ -138,12 +138,12 @@ def update_output(contents):
     if prev_contents is not None:
         delta_df = prev_contents.copy()
         delta_df.iloc[:, 1:] = delta_df.iloc[:, 1:] - result_df.iloc[:, 1:]
-        delta_df.iloc[:, 1:] = delta_df.iloc[:,1:].map(lambda x: f"{int(x // 60)} hours {int(x % 60)} minutes")
+        delta_df.iloc[:, 1:] = delta_df.iloc[:,1:].map(lambda x: f"{int(x // 60)}h{int(x % 60)}")
         delta_dict = delta_df.to_dict("records")
 
     prev_contents = result_df.copy()
 
-    result_df.iloc[:,1:] = result_df.iloc[:,1:].map(lambda x: f"{int(x // 60)} hours {int(x % 60)} minutes")
+    result_df.iloc[:,1:] = result_df.iloc[:,1:].map(lambda x: f"{int(x // 60)}h{int(x % 60)}")
 
     result_dict = result_df.to_dict("records")
 
