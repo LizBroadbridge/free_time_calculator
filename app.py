@@ -198,7 +198,7 @@ def update_output(contents, contents_b, filename, filename_b, n_clicks, value):
         style_b = {'display': 'none'}
 
     if n_clicks is None:
-        return style, style_b, [], [], []
+        return style, style_b, no_update, no_update, no_update
 
     content_type, content_string = contents.split(',')
 
