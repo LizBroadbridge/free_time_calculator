@@ -45,6 +45,16 @@ app.layout = html.Div(
                     multiple=False
                 ),
                 html.Div(id="output-div"),
+                dcc.Markdown("Select an option:"),
+                dcc.Dropdown(
+                    id='dropdown-toggle',
+                    options=[
+                        {'label': 'Show DataTable', 'value': 'show'},
+                        {'label': 'Hide DataTable', 'value': 'hide'}
+                    ],
+                    value='hide'
+                ),
+                html.Div(id='datatable-container'),
                 dcc.Loading(
                     id="loading-table",
                     children=[
@@ -112,9 +122,10 @@ prev_contents = None
     Output('data-table', 'data'),
     Output('delta-table', 'data'),
     Input('upload-data', 'contents'),
+    Input('dropdown-toggle', 'value'),
     prevent_initial_call=True
 )
-def update_output(contents):
+def update_output(contents, value):
     if contents is None:
         return None
 
@@ -137,13 +148,19 @@ def update_output(contents):
 
     if prev_contents is not None:
         delta_df = prev_contents.copy()
-        delta_df.iloc[:, 1:] = delta_df.iloc[:, 1:] - result_df.iloc[:, 1:]
+        delta_df.iloc[:, 1:] = result_df.iloc[:, 1:] - delta_df.iloc[:, 1:]
         delta_df.iloc[:, 1:] = delta_df.iloc[:,1:].map(lambda x: f"{int(x // 60)}h{int(x % 60)}")
+        delta_df.replace("0h0", '-', inplace=True)
+        if value == "hide":
+            delta_df = delta_df.tail(1)
         delta_dict = delta_df.to_dict("records")
 
     prev_contents = result_df.copy()
 
     result_df.iloc[:,1:] = result_df.iloc[:,1:].map(lambda x: f"{int(x // 60)}h{int(x % 60)}")
+
+    if value == "hide":
+        result_df = result_df.tail(1)
 
     result_dict = result_df.to_dict("records")
 
