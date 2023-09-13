@@ -44,7 +44,6 @@ app.layout = html.Div(
                     },
                     multiple=False
                 ),
-                html.Div(id="output-div"),
                 dcc.Markdown("Select an option:"),
                 dcc.Dropdown(
                     id='dropdown-toggle',
@@ -54,7 +53,6 @@ app.layout = html.Div(
                     ],
                     value='hide'
                 ),
-                html.Div(id='datatable-container'),
                 dcc.Loading(
                     id="loading-table",
                     children=[
