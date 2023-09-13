@@ -27,6 +27,7 @@ app.layout = html.Div(
                     ),
                     className="header-description",
                 ),
+                html.Div(id='output-filename'),
                 dcc.Upload(
                     id='upload-data',
                     children=html.Div([
@@ -45,6 +46,7 @@ app.layout = html.Div(
                     },
                     multiple=False
                 ),
+                html.Div(id='output-filename-b'),
                 dcc.Upload(
                     id='upload-data-b',
                     children=html.Div([
@@ -173,12 +175,32 @@ app.layout = html.Div(
 
 prev_contents = None
 
+def filename_children(filename):
+    if filename is not None:
+        return html.P(
+            children=filename,
+            style={
+                'width': '100%',
+                'height': '60px',
+                'lineHeight': '60px',
+                'borderWidth': '1px',
+                'borderStyle': 'solid',
+                'borderRadius': '5px',
+                'textAlign': 'center',
+                'margin': '10px',
+            },
+        )
+    else:
+        return None
+
 @app.callback(
     Output('upload-data', 'style'),
     Output('upload-data-b', 'style'),
     Output('data-table', 'data'),
     Output('data-table-b', 'data'),
     Output('delta-table', 'data'),
+    Output('output-filename', 'children'),
+    Output('output-filename-b', 'children'),
     State('upload-data', 'contents'),
     State('upload-data-b', 'contents'),
     Input('upload-data', 'filename'),
@@ -191,6 +213,9 @@ def update_output(contents, contents_b, filename, filename_b, n_clicks, value):
     style = no_update
     style_b = no_update
 
+    output_filename_children = filename_children(filename)
+    output_filename_children_b = filename_children(filename_b)
+
     if filename is not None:
         style = {'display': 'none'}
 
@@ -198,7 +223,7 @@ def update_output(contents, contents_b, filename, filename_b, n_clicks, value):
         style_b = {'display': 'none'}
 
     if n_clicks is None:
-        return style, style_b, no_update, no_update, no_update
+        return style, style_b, no_update, no_update, no_update, output_filename_children, output_filename_children_b
 
     content_type, content_string = contents.split(',')
 
@@ -249,7 +274,7 @@ def update_output(contents, contents_b, filename, filename_b, n_clicks, value):
     result_dict = result_df.to_dict("records")
     result_dict_b = result_df_b.to_dict("records")
 
-    return style, style_b, result_dict, result_dict_b, delta_dict
+    return style, style_b, result_dict, result_dict_b, delta_dict, output_filename_children, output_filename_children_b
 
 if __name__ == "__main__":
     app.run_server(debug=True)
