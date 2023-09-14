@@ -124,7 +124,6 @@ app.layout = html.Div(
                                                         "Free (boys at home)",
                                                         "Free (boys in bed)",
                                                         "Free (with Milo at home)",
-                                                        "Total",
                                                     ]
                                                 ],
                                             ),
@@ -150,7 +149,6 @@ app.layout = html.Div(
                                                         "Free (boys at home)",
                                                         "Free (boys in bed)",
                                                         "Free (with Milo at home)",
-                                                        "Total",
                                                     ]
                                                 ],
                                             ),
@@ -176,7 +174,6 @@ app.layout = html.Div(
                                                         "Free (boys at home)",
                                                         "Free (boys in bed)",
                                                         "Free (with Milo at home)",
-                                                        "Total",
                                                     ]
                                                 ],
                                             ),
