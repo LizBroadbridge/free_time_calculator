@@ -110,76 +110,19 @@ app.layout = html.Div(
                             "Schedule A:",
                             dcc.Loading(
                                 id="loading-table",
-                                children=[
-                                    html.Div(
-                                        [
-                                            dash_table.DataTable(
-                                                id="data-table",
-                                                columns=[
-                                                    {"name": col, "id": col}
-                                                    for col in [
-                                                        "Day",
-                                                        "Free",
-                                                        "Free (at Gymnastics)",
-                                                        "Free (boys at home)",
-                                                        "Free (boys in bed)",
-                                                        "Free (with Milo at home)",
-                                                    ]
-                                                ],
-                                            ),
-                                        ]
-                                    ),
-                                ],
+                                children=[html.Div([dash_table.DataTable(id="data-table")])],
                                 type="default",
                             ),
                             "Schedule B:",
                             dcc.Loading(
                                 id="loading-table-b",
-                                children=[
-                                    html.Div(
-                                        [
-                                            dash_table.DataTable(
-                                                id="data-table-b",
-                                                columns=[
-                                                    {"name": col, "id": col}
-                                                    for col in [
-                                                        "Day",
-                                                        "Free",
-                                                        "Free (at Gymnastics)",
-                                                        "Free (boys at home)",
-                                                        "Free (boys in bed)",
-                                                        "Free (with Milo at home)",
-                                                    ]
-                                                ],
-                                            ),
-                                        ]
-                                    ),
-                                ],
+                                children=[html.Div([dash_table.DataTable(id="data-table-b")])],
                                 type="default",
                             ),
                             "Delta:",
                             dcc.Loading(
                                 id="loading-delta-table",
-                                children=[
-                                    html.Div(
-                                        [
-                                            dash_table.DataTable(
-                                                id="delta-table",
-                                                columns=[
-                                                    {"name": col, "id": col}
-                                                    for col in [
-                                                        "Day",
-                                                        "Free",
-                                                        "Free (at Gymnastics)",
-                                                        "Free (boys at home)",
-                                                        "Free (boys in bed)",
-                                                        "Free (with Milo at home)",
-                                                    ]
-                                                ],
-                                            ),
-                                        ]
-                                    ),
-                                ],
+                                children=[html.Div([dash_table.DataTable(id="delta-table")])],
                                 type="default",
                             ),
                             "Delta (markdown):",
@@ -226,6 +169,9 @@ def filename_children(filename):
     Output('delta-table-markdown', 'children'),
     Output('output-filename', 'children'),
     Output('output-filename-b', 'children'),
+    Output('data-table', 'columns'),
+    Output('data-table-b', 'columns'),
+    Output('delta-table', 'columns'),
     State('upload-data', 'contents'),
     State('upload-data-b', 'contents'),
     Input('upload-data', 'filename'),
@@ -248,7 +194,7 @@ def update_output(contents, contents_b, filename, filename_b, n_clicks, value):
         style_b = {'display': 'none'}
 
     if n_clicks is None:
-        return style, style_b, no_update, no_update, no_update, no_update, output_filename_children, output_filename_children_b
+        return style, style_b, no_update, no_update, no_update, no_update, output_filename_children, output_filename_children_b, no_update, no_update, no_update
 
     content_type, content_string = contents.split(',')
 
@@ -302,11 +248,13 @@ def update_output(contents, contents_b, filename, filename_b, n_clicks, value):
 
     delta_md = delta_df.to_markdown(index=False)
 
+    columns = [{'name': col, 'id': col} for col in result_df.columns]
+
     delta_dict = delta_df.to_dict("records")
     result_dict = result_df.to_dict("records")
     result_dict_b = result_df_b.to_dict("records")
 
-    return style, style_b, result_dict, result_dict_b, delta_dict, delta_md, output_filename_children, output_filename_children_b
+    return style, style_b, result_dict, result_dict_b, delta_dict, delta_md, output_filename_children, output_filename_children_b, columns, columns, columns
 
 
 if __name__ == "__main__":
