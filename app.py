@@ -185,6 +185,9 @@ app.layout = html.Div(
                                 ],
                                 type="default",
                             ),
+                            "Delta (markdown):",
+                            html.Pre(id="delta-table-markdown"),
+                            dcc.Clipboard(id="delta-table-copy", target_id="delta-table-markdown", style={"fontSize":20}),
                         ],
                         gap=3,
                     ),
@@ -223,6 +226,7 @@ def filename_children(filename):
     Output('data-table', 'data'),
     Output('data-table-b', 'data'),
     Output('delta-table', 'data'),
+    Output('delta-table-markdown', 'children'),
     Output('output-filename', 'children'),
     Output('output-filename-b', 'children'),
     State('upload-data', 'contents'),
@@ -247,7 +251,7 @@ def update_output(contents, contents_b, filename, filename_b, n_clicks, value):
         style_b = {'display': 'none'}
 
     if n_clicks is None:
-        return style, style_b, no_update, no_update, no_update, output_filename_children, output_filename_children_b
+        return style, style_b, no_update, no_update, no_update, no_update, output_filename_children, output_filename_children_b
 
     content_type, content_string = contents.split(',')
 
@@ -294,11 +298,14 @@ def update_output(contents, contents_b, filename, filename_b, n_clicks, value):
         result_df_b = result_df_b.tail(1)
         delta_df = delta_df.tail(1)
 
+    delta_md = delta_df.to_markdown(index=False)
+
     delta_dict = delta_df.to_dict("records")
     result_dict = result_df.to_dict("records")
     result_dict_b = result_df_b.to_dict("records")
 
-    return style, style_b, result_dict, result_dict_b, delta_dict, output_filename_children, output_filename_children_b
+    return style, style_b, result_dict, result_dict_b, delta_dict, delta_md, output_filename_children, output_filename_children_b
+
 
 if __name__ == "__main__":
     app.run_server(debug=True)
