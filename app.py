@@ -264,8 +264,6 @@ def update_output(contents, contents_b, filename, filename_b, n_clicks, value):
 
     csv_string = decoded.decode('utf-8')
 
-    #
-
     content_type, content_string = contents_b.split(',')
 
     if content_type != "data:text/csv;base64":
@@ -276,8 +274,6 @@ def update_output(contents, contents_b, filename, filename_b, n_clicks, value):
     decoded = base64.b64decode(content_string)
 
     csv_string_b = decoded.decode('utf-8')
-
-    #
 
     result_df = free_time_calc(csv_string)
 
