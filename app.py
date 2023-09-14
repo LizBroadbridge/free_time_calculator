@@ -276,7 +276,6 @@ def update_output(contents, contents_b, filename, filename_b, n_clicks, value):
 
     result_df_b = free_time_calc(csv_string_b)
 
-    delta_dict = None
 
     delta_df = result_df.copy()
     delta_df.iloc[:, 1:] = result_df_b.iloc[:, 1:] - delta_df.iloc[:, 1:]
