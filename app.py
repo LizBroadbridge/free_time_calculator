@@ -296,9 +296,9 @@ def update_output(contents, contents_b, filename, filename_b, n_clicks, value):
     result_df_b.iloc[:,1:] = result_df_b.iloc[:,1:].map(lambda x: f"{int(x // 60)}h{int(x % 60)}")
 
     if value == "hide":
-        result_df = result_df.tail(1)
-        result_df_b = result_df_b.tail(1)
-        delta_df = delta_df.tail(1)
+        result_df = result_df.tail(1).drop('Day', axis=1)
+        result_df_b = result_df_b.tail(1).drop('Day', axis=1)
+        delta_df = delta_df.tail(1).drop('Day', axis=1)
 
     delta_md = delta_df.to_markdown(index=False)
 
