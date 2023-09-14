@@ -289,7 +289,7 @@ def update_output(contents, contents_b, filename, filename_b, n_clicks, value):
 
     delta_df = result_df.copy()
     delta_df.iloc[:, 1:] = result_df_b.iloc[:, 1:] - delta_df.iloc[:, 1:]
-    delta_df.iloc[:, 1:] = delta_df.iloc[:,1:].map(lambda x: f"{int(x // 60)}h{int(x % 60)}")
+    delta_df.iloc[:, 1:] = delta_df.iloc[:,1:].map(lambda x: (f"-{int(abs(x)//60)}h{int(abs(x)%60)}" if x < 0 else f"{int(x//60)}h{int(x%60)}"))
     delta_df.replace("0h0", '-', inplace=True)
 
     result_df.iloc[:,1:] = result_df.iloc[:,1:].map(lambda x: f"{int(x // 60)}h{int(x % 60)}")
